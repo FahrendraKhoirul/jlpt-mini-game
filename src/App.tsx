@@ -16,9 +16,9 @@ function App() {
   return (
     <div className="h-screen flex flex-col bg-white w-screen">
       {/* MAIN CONTENT */}
-      <div className="flex-1 flex p-8 overflow-hidden">
+      <div className="flex-1 flex flex-col md:flex-row p-8 overflow-auto">
         {/* LEFT COLUMN */}
-        <div className="flex-1 flex justify-center place-items-center">
+        <div className="flex-1 flex justify-center items-center py-4 md:py-0">
           {/* MAKE COLUMN TO CENTERIZE CONTENT  */}
           <div className="flex flex-col space-y-1 text-center ">
             <p className="text-3xl font-bold text-black mb-2">
@@ -29,7 +29,7 @@ function App() {
           </div>
         </div>
         {/* RIGH COLUMN */}
-        <div className="flex-1  flex items-center justify-center">
+        <div className="flex-1 flex items-center justify-center py-4 md:py-0">
           <div className="flex-1 flex-col space-y-1 text-center">
             <p className="text-5xl text-black font-black underline decoration-dashed underline-offset-8">
               {words[currentWordIndex!].furigana}
