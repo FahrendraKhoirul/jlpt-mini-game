@@ -34,6 +34,9 @@ function App() {
             <p className="text-5xl text-black font-black underline decoration-dashed underline-offset-8">
               {words[currentWordIndex!].furigana}
             </p>
+            <p className="text-3xl text-black font-gray-700 mt-4">
+              {words[currentWordIndex!].romaji}
+            </p>
             <div className="mt-8">
               {questionLoading ? (
                 <p>Loading Question...</p>
