@@ -38,6 +38,12 @@ function App() {
             </p>
             <iframe src="https://lottie.host/embed/ef1e4243-480d-4393-bc11-675c63fd12a9/KR3CMmLqro.lottie"></iframe>
             <p className="text-black text-2xl font-bold">{score} STREAK</p>
+            {/* show current level is N5, make it like chip but still design like existing*/}
+            <div className="flex items-center justify-center mt-4">
+              <div className="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-full">
+                <p className="text-black text-2xl font-bold">Level: N5</p>
+              </div>
+            </div>
           </div>
         </div>
         {/* RIGH COLUMN */}
