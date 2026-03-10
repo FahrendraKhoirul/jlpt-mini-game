@@ -1,4 +1,5 @@
 import "./App.css";
+import { useState } from "react";
 import Result from "./components/Result";
 import { useGameJLPT } from "./hooks/useGameJLPT";
 
@@ -8,12 +9,19 @@ function App() {
     questionLoading,
     options,
     score,
+    currentLevel,
     handleAnswer,
     handleNextQuestion,
     isModalOpen,
     selectedWord,
     questionWord,
+    gameStats,
+    leveledUp,
+    newLevel,
   } = useGameJLPT();
+
+  const [showRomaji, setShowRomaji] = useState(true);
+
   if (initialLoading) {
     return (
       <div className="h-screen w-screen flex flex-col justify-center items-center bg-white space-y-4">
@@ -38,11 +46,31 @@ function App() {
             </p>
             <iframe src="https://lottie.host/embed/ef1e4243-480d-4393-bc11-675c63fd12a9/KR3CMmLqro.lottie"></iframe>
             <p className="text-black text-2xl font-bold">{score} STREAK</p>
-            {/* show current level is N5, make it like chip but still design like existing*/}
+
+            {/* Highest Streak Badge */}
+            {gameStats.highestStreak > 0 && (
+              <div className="flex items-center justify-center gap-2">
+                <p className="text-amber-500 text-lg font-bold">
+                  🏆 Best: {gameStats.highestStreak}
+                </p>
+              </div>
+            )}
+
+            {/* Current Level Chip */}
             <div className="flex items-center justify-center mt-4">
               <div className="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-full">
-                <p className="text-black text-2xl font-bold">Level: N5</p>
+                <p className="text-black text-2xl font-bold">
+                  Level: N{currentLevel}
+                </p>
               </div>
+            </div>
+
+            {/* Level Progress */}
+            <div className="flex items-center justify-center mt-2">
+              <p className="text-gray-400 text-sm font-semibold">
+                Next level in {20 - (score % 20)} streak
+                {currentLevel <= 1 ? " (Max level reached!)" : ""}
+              </p>
             </div>
           </div>
         </div>
@@ -54,9 +82,60 @@ function App() {
                 ? questionWord?.furigana
                 : questionWord?.word}
             </p>
-            <p className="text-3xl text-black font-gray-700 mt-4">
-              {questionWord?.romaji}
-            </p>
+            <div className="flex items-center justify-center gap-2 mt-4">
+              <p className="text-3xl text-black font-gray-700">
+                {showRomaji ? questionWord?.romaji : "・・・"}
+              </p>
+              <button
+                onClick={() => setShowRomaji((prev) => !prev)}
+                className="text-gray-400 hover:text-gray-700 transition-colors duration-150"
+                title={showRomaji ? "Hide romaji" : "Show romaji"}
+              >
+                {showRomaji ? (
+                  // Eye icon
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-6 h-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                    />
+                  </svg>
+                ) : (
+                  // Eye-off icon
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-6 h-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.97 9.97 0 012.186-3.411M6.343 6.343A9.956 9.956 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.953 9.953 0 01-4.274 5.186M15 12a3 3 0 01-4.243 4.243M9.879 9.879a3 3 0 014.242 4.242"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3 3l18 18"
+                    />
+                  </svg>
+                )}
+              </button>
+            </div>
             <div className="mt-8">
               {questionLoading ? (
                 <div className="flex flex-col items-center gap-3">
@@ -132,6 +211,8 @@ hover:shadow-[0_8px_0_0_rgba(0,0,0,0.5)] hover:text-gray-700 hover:border-gray-7
           onClose={handleNextQuestion}
           questionWord={questionWord}
           selectedWord={selectedWord}
+          leveledUp={leveledUp}
+          newLevel={newLevel}
         />
       )}
     </div>

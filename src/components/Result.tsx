@@ -6,6 +6,8 @@ interface Props {
   onClose: () => void;
   questionWord?: WordResponse;
   selectedWord?: WordResponse;
+  leveledUp?: boolean;
+  newLevel?: number | null;
 }
 
 export default function Result({
@@ -13,11 +15,24 @@ export default function Result({
   onClose,
   questionWord,
   selectedWord,
+  leveledUp,
+  newLevel,
 }: Props) {
   const isCorrect = questionWord?.meaning === selectedWord?.meaning;
   return (
     <Modal isOpen={isOpen}>
       <div className="text-center flex flex-col items-center">
+        {/* Level Up Celebration */}
+        {leveledUp && newLevel && (
+          <div className="w-full bg-amber-50 p-4 rounded-2xl mb-4 border-2 border-amber-300 animate-bounce">
+            <p className="text-3xl mb-1">🎉</p>
+            <p className="text-amber-600 font-black text-lg">Level Up!</p>
+            <p className="text-amber-500 font-bold text-sm">
+              You're now on N{newLevel}!
+            </p>
+          </div>
+        )}
+
         <h2
           className={`text-4xl font-black mb-2 ${isCorrect ? "text-green-500" : "text-red-500"}`}
         >

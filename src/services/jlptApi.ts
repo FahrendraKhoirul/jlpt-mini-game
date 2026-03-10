@@ -2,10 +2,11 @@ import type { WordResponse } from "../types/word_response";
 
 const BASE_URL = "https://jlpt-vocab-api.vercel.app/api";
 
-export async function getWordsByLevel(): Promise<WordResponse[]> {
+export async function getWordsByLevel(
+  level: number = 5,
+): Promise<WordResponse[]> {
   // random offset between 0 and 100
   const offset = Math.floor(Math.random() * 66);
-  const level = 5;
   const response = await fetch(
     `${BASE_URL}/words?level=${level}&limit=10&offset=${offset}`,
   );
