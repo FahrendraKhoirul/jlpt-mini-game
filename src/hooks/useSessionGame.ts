@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import type { GameStats } from "../types/game_stats";
 
 const STORAGE_KEY = "jlptMiniGameStats";
@@ -14,20 +14,20 @@ const DEFAULT_STATS: GameStats = {
 };
 
 export function useSessionGame() {
-  const [gameStats, setGameStats] = useState<GameStats>(DEFAULT_STATS);
-
-  // Load from localStorage on mount
-  useEffect(() => {
+  // Read localStorage synchronously so stats are already correct on first render
+  // (the saved level must be available to useGameJLPT's initializer).
+  const [gameStats, setGameStats] = useState<GameStats>(() => {
     const storedStats = localStorage.getItem(STORAGE_KEY);
     if (storedStats) {
       try {
-        setGameStats(JSON.parse(storedStats));
+        return { ...DEFAULT_STATS, ...JSON.parse(storedStats) };
       } catch {
         // If corrupted, use defaults
         localStorage.removeItem(STORAGE_KEY);
       }
     }
-  }, []);
+    return DEFAULT_STATS;
+  });
 
   // Persist to localStorage whenever gameStats changes
   const saveStats = useCallback((updatedStats: GameStats) => {

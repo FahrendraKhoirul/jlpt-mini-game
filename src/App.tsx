@@ -68,8 +68,9 @@ function App() {
             {/* Level Progress */}
             <div className="flex items-center justify-center mt-2">
               <p className="text-gray-400 text-sm font-semibold">
-                Next level in {20 - (score % 20)} streak
-                {currentLevel <= 1 ? " (Max level reached!)" : ""}
+                {currentLevel <= 1
+                  ? "Max level reached! 🏆"
+                  : `Next level in ${20 - (score % 20)} streak`}
               </p>
             </div>
           </div>

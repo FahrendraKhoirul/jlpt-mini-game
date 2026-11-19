@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getWordsByLevel } from "../services/jlptApi";
 import type { WordResponse } from "../types/word_response";
 import { useSessionGame } from "./useSessionGame";
@@ -7,6 +7,8 @@ const STREAK_PER_LEVEL = 20;
 const MAX_LEVEL = 1; // N1 is the hardest (lowest number)
 
 export function useGameJLPT() {
+  const { gameStats, updateStats } = useSessionGame();
+
   const [words, setWords] = useState<WordResponse[]>([]);
   const [initialLoading, setInitialLoading] = useState(true);
   const [questionLoading, setQuestionLoading] = useState(true);
@@ -15,7 +17,10 @@ export function useGameJLPT() {
   );
   const [options, setOptions] = useState<WordResponse[]>([]);
   const [score, setScore] = useState(0);
-  const [currentLevel, setCurrentLevel] = useState(5);
+  const [currentLevel, setCurrentLevel] = useState(() => {
+    const savedLevel = gameStats.highestLevel;
+    return savedLevel >= MAX_LEVEL && savedLevel <= 5 ? savedLevel : 5;
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedWord, setSelectedWord] = useState<WordResponse>();
   const [questionWord, setQuestionWord] = useState<WordResponse>();
@@ -23,28 +28,22 @@ export function useGameJLPT() {
   const [newLevel, setNewLevel] = useState<number | null>(null);
   const [isHideRomaji, setIsHideRomaji] = useState(false);
 
-  const { gameStats, updateStats } = useSessionGame();
-
-  // Initialize: load saved level and increment gamesPlayed
+  // Initialize once: count the session and load the first question.
+  // (guarded with a ref because StrictMode runs mount effects twice in dev)
+  const sessionInitialized = useRef(false);
   useEffect(() => {
-    const savedLevel = gameStats.highestLevel;
-    if (savedLevel >= MAX_LEVEL && savedLevel <= 5) {
-      setCurrentLevel(savedLevel);
-    }
+    if (sessionInitialized.current) return;
+    sessionInitialized.current = true;
+
     updateStats((prev) => ({
       ...prev,
       gamesPlayed: prev.gamesPlayed + 1,
       lastPlayedAt: new Date().toISOString(),
     }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
-  // Fetch words on mount and whenever level changes
-  useEffect(() => {
-    setInitialLoading(true);
     getWords(currentLevel);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentLevel]);
+  }, []);
 
   const getWords = (level: number) => {
     setQuestionLoading(true);
@@ -122,6 +121,8 @@ export function useGameJLPT() {
     setIsModalOpen(false);
     setLeveledUp(false);
     setNewLevel(null);
+    // currentLevel is already the new level here, so the next question is
+    // fetched only when the player closes the result modal (no double fetch).
     getWords(currentLevel);
   };
 
