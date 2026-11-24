@@ -168,8 +168,8 @@ hover:shadow-[0_8px_0_0_rgba(0,0,0,0.5)] hover:text-gray-700 hover:border-gray-7
         </div>
       </div>
       {/* FOOTER */}
-      <footer className="h-16 flex flex-col items-center justify-center border-t-3 border-gray-400 bg-white text-gray-600 text-sm">
-        <p className="mb-2 font-semibold">2026 · by Fahrendra Khoirul</p>
+      <footer className="flex flex-col items-center justify-center gap-2 border-t-3 border-gray-400 bg-white py-4 text-gray-600 text-sm">
+        <p className="font-semibold">2026 · by Fahrendra Khoirul</p>
         <div className="flex justify-center gap-4">
           <a
             href="https://www.linkedin.com/in/fahrendra-khoirul-ihtada/"
@@ -204,6 +204,22 @@ hover:shadow-[0_8px_0_0_rgba(0,0,0,0.5)] hover:text-gray-700 hover:border-gray-7
             GitHub
           </a>
         </div>
+
+        {/* PRODUCT HUNT BADGE */}
+        <a
+          href="https://www.producthunt.com/products/jlpt-mini-game?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-jlpt-mini-game"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-1 transition-opacity duration-150 hover:opacity-80"
+        >
+          <img
+            src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1328556&theme=neutral&t=1795493923145"
+            alt="JLPT Mini Game - Make learning Japanese and practicing JLPT feel like a game | Product Hunt"
+            width={250}
+            height={54}
+            loading="lazy"
+          />
+        </a>
       </footer>
 
       {questionWord != null && (
